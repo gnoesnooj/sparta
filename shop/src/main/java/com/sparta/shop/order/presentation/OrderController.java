@@ -32,8 +32,11 @@ public class OrderController {
         return new ResponseEntity<>(orderService.readById(id), HttpStatus.OK);
     }
 
-//    @GetMapping
-//    public List<OrderResponseDto> readByCursor(@RequestParam Long cursorId, @RequestParam(defaultValue = "5") long limit){
-//        orderService.readByCursor(cursorId, limit);
-//    }
+
+    @GetMapping("/paging")
+    public ResponseEntity<List<OrderResponseDto>> readAll(@RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "10") int size){
+        return new ResponseEntity<>(orderService.readAll(page, size), HttpStatus.OK);
+
+    }
 }

@@ -9,11 +9,10 @@ import com.sparta.shop.product.domain.Product;
 import com.sparta.shop.product.domain.repository.ProductRepository;
 import com.sparta.shop.product.exception.ProductNotFoundException;
 import jakarta.transaction.Transactional;
-import java.awt.print.Pageable;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +38,13 @@ public class OrderService {
                 .orElseThrow(OrderNotFoundException::new));
     }
 
-    public void readByCursor(Long cursorId, long limit) {
-//        Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "id"));
+    public List<OrderResponseDto> readAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<OrderResponseDto> dtos = orderRepository.findAll(pageable)
+                .stream()
+                .map(OrderResponseDto::from)
+                .toList();
+
+        return dtos;
     }
 }
