@@ -10,6 +10,8 @@ import com.sparta.shop.product.domain.repository.ProductRepository;
 import com.sparta.shop.product.exception.ProductNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +26,7 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     public OrderResponseDto create(OrderCreateDto createDto) {
-        Product product = productRepository.findById(createDto.getProductId())
+        Product product = productRepository.findByIdForLock(createDto.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
         Order order = createDto.toEntity(product);
         product.buy(createDto.getQuantity());
