@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -24,6 +23,7 @@ public class ProductService {
         return ProductResponseDto.from(product);
     }
 
+    @Transactional
     public ProductResponseDto update(ProductUpdateDto dto) {
         Product product = findById(dto.getProductId());
 
@@ -39,7 +39,6 @@ public class ProductService {
             product.restock(dto.getStock());
         }
 
-        productRepository.save(product);
         return ProductResponseDto.from(product);
     }
 
@@ -56,10 +55,10 @@ public class ProductService {
         return dtos;
     }
 
+    @Transactional
     public void deleteById(long id) {
         Product product = findById(id);
         product.activeOff();
-        productRepository.save(product);
     }
 
     private Product findById(long id) {
