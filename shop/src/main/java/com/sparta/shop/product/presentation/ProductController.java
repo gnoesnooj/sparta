@@ -6,6 +6,8 @@ import com.sparta.shop.product.application.dto.ProductResponseDto;
 import com.sparta.shop.product.application.dto.ProductUpdateDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,27 +25,27 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ProductResponseDto create(@RequestBody ProductCreateDto createDto) {
-        return productService.create(createDto);
+    public ResponseEntity<ProductResponseDto> create(@RequestBody ProductCreateDto createDto) {
+        return new ResponseEntity<>(productService.create(createDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ProductResponseDto readById(@PathVariable("id") long id) {
-        return productService.readById(id);
+    public ResponseEntity<ProductResponseDto> readById(@PathVariable("id") long id) {
+        return new ResponseEntity<>(productService.readById(id), HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public List<ProductResponseDto> readAll() {
-        return productService.readActiveProducts();
+    public ResponseEntity<List<ProductResponseDto>> readAll() {
+        return new ResponseEntity<>(productService.readActiveProducts(), HttpStatus.OK);
     }
 
     @PatchMapping
-    public ProductResponseDto update(@RequestBody ProductUpdateDto updateDto) {
-        return productService.update(updateDto);
+    public ResponseEntity<ProductResponseDto> update(@RequestBody ProductUpdateDto updateDto) {
+        return new ResponseEntity<>(productService.update(updateDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") long id) {
-        productService.deleteById(id);
+    public ResponseEntity<Long> deleteById(@PathVariable("id") long id) {
+        return new ResponseEntity<>(productService.deleteById(id), HttpStatus.NO_CONTENT);
     }
 }

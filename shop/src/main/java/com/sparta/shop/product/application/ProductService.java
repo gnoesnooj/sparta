@@ -56,9 +56,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteById(long id) {
+    public long deleteById(long id) {
         Product product = findById(id);
         product.activeOff();
+        return product.getId();
     }
 
     private Product findById(long id) {
