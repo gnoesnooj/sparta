@@ -1,6 +1,7 @@
 package com.sparta.shop;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.sparta.shop.order.application.OrderService;
 import com.sparta.shop.order.application.dto.OrderCreateDto;
@@ -28,13 +29,13 @@ class ShopApplicationTests {
         Product product = Product.builder()
                 .name("테스트 상품")
                 .price(1000)
-                .stock(1)
+                .stock(100)
                 .isActive(true)
                 .build();
 
         productRepository.save(product);
 
-        int user = 2;
+        int user = 100;
         int quantity = 1;
 
         ExecutorService executorService = Executors.newFixedThreadPool(user);
@@ -62,6 +63,6 @@ class ShopApplicationTests {
 
         System.out.println("남은 재고 = " + result.getStock());
 
-        assertThat(result.getStock()).isGreaterThanOrEqualTo(0);
+        assertEquals(0, result.getStock());
     }
 }
