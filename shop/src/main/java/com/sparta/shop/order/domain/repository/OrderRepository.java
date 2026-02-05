@@ -13,7 +13,11 @@ import org.springframework.data.repository.query.Param;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select o from Order o join fetch o.product where o.id = :id")
-    Optional<Order> findOneById(@Param("id") Long id);
+    Optional<Order> findOrderById(@Param("id") Long id);
+
+    default Order findByIdForFetch(Long id){
+        return findOrderById(id).orElseThrow(OrderNotFoundException::new);
+    }
 
     @EntityGraph(attributePaths = "product")
     Page<Order> findAll(Pageable pageable);
