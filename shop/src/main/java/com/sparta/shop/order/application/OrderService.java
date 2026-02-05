@@ -26,8 +26,7 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     public OrderResponseDto create(OrderCreateDto createDto) {
-        Product product = productRepository.findByIdForLock(createDto.getProductId())
-                .orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findByIdForLock(createDto.getProductId());
         Order order = createDto.toEntity(product);
         product.buy(createDto.getQuantity());
         orderRepository.save(order);
@@ -36,8 +35,7 @@ public class OrderService {
     }
 
     public OrderResponseDto readById(long id) {
-        return OrderResponseDto.from(orderRepository.findById(id)
-                .orElseThrow(OrderNotFoundException::new));
+        return OrderResponseDto.from(orderRepository.findOrderById(id));
     }
 
     public List<OrderResponseDto> readAll(int page, int size) {

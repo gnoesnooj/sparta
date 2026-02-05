@@ -35,8 +35,9 @@ public class OrderController {
 
     @GetMapping("/paging")
     public ResponseEntity<List<OrderResponseDto>> readAll(@RequestParam(defaultValue = "0") int page,
-                                                                   @RequestParam(defaultValue = "10") int size){
+                                                          @RequestParam(defaultValue = "10") int size) {
         return new ResponseEntity<>(orderService.readAll(page, size), HttpStatus.OK);
 
     }
+
 }

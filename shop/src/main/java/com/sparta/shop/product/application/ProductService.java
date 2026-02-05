@@ -63,7 +63,6 @@ public class ProductService {
     }
 
     private Product findById(long id) {
-        return productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+        return productRepository.findProductById(id);
     }
 }

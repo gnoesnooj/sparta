@@ -1,6 +1,7 @@
 package com.sparta.shop.product.domain.repository;
 
 import com.sparta.shop.product.domain.Product;
+import com.sparta.shop.product.exception.ProductNotFoundException;
 import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Optional<Product> findById(Long id);
+    default Product findProductById(Long id) {
+        return findById(id).orElseThrow(ProductNotFoundException::new);
+    }
 
     List<Product> findAll();
 
@@ -19,5 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from Product p where p.id = :id")
-    Optional<Product> findByIdForLock(@Param("id") Long id);
+    default Product findByIdForLock(@Param("id") Long id) {
+        return findProductById(id);
+    }
+
 }
