@@ -46,7 +46,7 @@ public class Product {
         this.stock += quantity;
     }
 
-    public void buy(int quantity) {
+    public void decreaseStock(int quantity) {
         if (quantity > stock) {
             throw new StockShortageException();
         }
