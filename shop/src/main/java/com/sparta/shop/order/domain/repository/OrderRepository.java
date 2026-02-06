@@ -15,9 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select o from Order o join fetch o.product where o.id = :id")
     Optional<Order> findOrderById(@Param("id") Long id);
 
-    default Order findByIdForFetch(Long id){
-        return findOrderById(id).orElseThrow(OrderNotFoundException::new);
-    }
+    Optional<Order> findByIdForFetch(Long id);
 
     @EntityGraph(attributePaths = "product")
     Page<Order> findAll(Pageable pageable);

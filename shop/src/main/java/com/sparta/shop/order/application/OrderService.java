@@ -7,6 +7,7 @@ import com.sparta.shop.order.domain.repository.OrderRepository;
 import com.sparta.shop.order.exception.OrderNotFoundException;
 import com.sparta.shop.product.domain.Product;
 import com.sparta.shop.product.domain.repository.ProductRepository;
+import com.sparta.shop.product.exception.ProductNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,9 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto create(OrderCreateDto createDto) {
-        Product product = productRepository.findProductWithLock(createDto.getProductId());
-        product.buy(createDto.getQuantity());
+        Product product = productRepository.findProductWithLock(createDto.getProductId())
+                .orElseThrow(ProductNotFoundException::new);
+        product.decreaseStock(createDto.getQuantity());
 
         Order order = createDto.toEntity(product);
         orderRepository.save(order);
@@ -32,10 +34,13 @@ public class OrderService {
         return OrderResponseDto.from(order);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponseDto readById(long id) {
-        return OrderResponseDto.from(orderRepository.findByIdForFetch(id));
+        return OrderResponseDto.from(orderRepository.findByIdForFetch(id)
+                .orElseThrow(OrderNotFoundException::new));
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponseDto> readAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<OrderResponseDto> dtos = orderRepository.findAll(pageable)
